@@ -8,7 +8,7 @@ class HealthCapacity : public Capacity
     public:
         HealthCapacity(int);
         void computeValue();
-        float getValueMax(){ return m_valueMax; }
+        float getValueMax() const { return m_valueMax; }
     private:
         float m_valueMax;
 };

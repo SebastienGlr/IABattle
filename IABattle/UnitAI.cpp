@@ -62,7 +62,7 @@ Action& UnitAI::operator()(Unit& u, const Army& ally, const Army& ennemy) const
 			throw std::string("Unexpected AICode.");
 		}
 		if (Point::getDistance(*uPosition, uEnnemy->getPosition()) > u.getWeaponRange().getValue()) //Move to the target
-			action = new ActionMove(u ,uPosition->getNextPosWithSpeed(uEnnemy->getPosition(), u.getSpeed().getValue()));
+			action = new ActionMove(u, uPosition->getNextPosWithSpeed(uEnnemy->getPosition(), u.getSpeed().getValue()));
 		else
 			action = new ActionShoot(u, *uEnnemy);
 	}

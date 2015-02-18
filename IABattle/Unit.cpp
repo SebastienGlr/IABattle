@@ -7,7 +7,7 @@
 
 unsigned int Unit::nbUnits = 0;
 
-Unit::Unit(int levelTotal) : m_unitId(++nbUnits), m_unitPosition(Point(0,0))
+Unit::Unit(int levelTotal) : m_unitId(++nbUnits), m_unitPosition(new Point(0,0))
 {
 	std::vector<int> levelsIndex;
     int tabLevel[7] = { 0 };
@@ -45,7 +45,7 @@ Unit::Unit(AICode AICode
            , int weaponDamageLevel
            , int weaponRangeLevel
            , int weaponSpeedLevel
-		   ) : m_unitId(++nbUnits), m_unitPosition(Point(0, 0)), m_AICode(AICode)
+		   ) : m_unitId(++nbUnits), m_unitPosition(new Point(0, 0)), m_AICode(AICode)
 {
     m_capacities[0] = new SpeedCapacity(speedLevel);
     m_capacities[1] = new HealthCapacity(healthLevel);
@@ -56,16 +56,16 @@ Unit::Unit(AICode AICode
     m_capacities[6] = new WeaponSpeedCapacity(weaponSpeedLevel);
 }
 
-Capacity& Unit::operator[](unsigned int i)
+Capacity& Unit::operator[](unsigned int i) const
 {
-    try
-    {
-        return dynamic_cast<Capacity&>(*m_capacities[i]);
-    }
-    catch(const std::out_of_range& oor)
-    {
-        std::cerr << "Out of range error: " << oor.what() << std::endl;
-    }
+	try
+	{
+		return dynamic_cast<Capacity&>(*m_capacities[i]);
+	}
+	catch (const std::out_of_range& oor)
+	{
+		std::cerr << "Out of range error: " << oor.what() << std::endl;
+	}
 }
 
 int Unit::getLevel() const
@@ -110,7 +110,7 @@ void Unit::takeDamage(float value)
     this->getHealth().setValue(newHealth);
 }
 
-bool Unit::isAlive()
+bool Unit::isAlive() const
 {
     return this->getHealth().getValue() > 0;
 }

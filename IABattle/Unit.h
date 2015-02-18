@@ -21,7 +21,7 @@ class Unit
 
 		//Attributes Getters
         int getId() const { return m_unitId; }
-        Point getPosition() const { return m_unitPosition; }
+        Point getPosition() const { return *m_unitPosition; }
         int getLevel() const;
 		AICode getAICode() const { return m_AICode; }
         //Capacity Getters
@@ -33,19 +33,19 @@ class Unit
         WeaponRangeCapacity& getWeaponRange() const { return dynamic_cast<WeaponRangeCapacity&>(*m_capacities[5]); }
         WeaponSpeedCapacity& getWeaponSpeed() const { return dynamic_cast<WeaponSpeedCapacity&>(*m_capacities[6]); }
 
-        void setPosition(const Point& p) { m_unitPosition = p; };
+        void setPosition(Point& p) { m_unitPosition = &p; };
 
-        Capacity& operator[](unsigned int);
+        Capacity& operator[](unsigned int) const;
 
         void refresh();
         bool shoot();
         void takeDamage(float);
-        bool isAlive();
+        bool isAlive() const;
     private:
         static unsigned int nbUnits;
         unsigned int m_unitId;
         Capacity *m_capacities[7];
-        Point m_unitPosition;
+        Point *m_unitPosition;
 		AICode m_AICode;
 };
 

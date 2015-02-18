@@ -1,6 +1,7 @@
 // IABattle.cpp : Defines the entry point for the console application.
 #include <iostream>
 #include <algorithm>
+#include <ctime>
 #include "Army.h"
 #include "UnitAI.h"
 
@@ -10,16 +11,19 @@ int main(int argc, char* argv[])
 	Unit *u1, *u2;
 	UnitAI ia;
 	int nbTours = 1;
+	srand(time(NULL));
 
 	while (a1.size() > 0 && a2.size() > 0)
 	{
 		std::cout << "========== Tour " << nbTours++ << " ==========" << std::endl;
 		//Round of the first Army
-		u1 = a1.getUnitList().at(std::rand() % a1.size());
+		std::random_shuffle(a1.getUnitList().begin(), a1.getUnitList().end());
+		u1 = a1.getUnitList().front();
 		ia(*u1, a1, a2).execute();
 		a2.purge();
 		//Round of the second Army
-		u2 = a2.getUnitList().at(std::rand() % a2.size());
+		std::random_shuffle(a2.getUnitList().begin(), a2.getUnitList().end());
+		u2 = a2.getUnitList().front();
 		ia(*u2, a2, a1).execute();
 		a1.purge();
 	}

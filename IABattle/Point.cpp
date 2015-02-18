@@ -18,6 +18,16 @@ Point& Point::getNextPosWithSpeed(const Point& position, float speed) const
 	return Point(position);
 }
 
+Point& Point::operator=(const Point& p)
+{
+	if (this != &p)
+	{
+		this->m_x = p.m_x;
+		this->m_y = p.m_y;
+	}
+	return *this;
+}
+
 std::ostream& operator<<(std::ostream &out, const Point& p)
 {
 	out << "(" << p.getX() << ", " << p.getY() << ")";

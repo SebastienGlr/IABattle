@@ -6,6 +6,7 @@ class Point
 {
     public:
         Point(float, float);
+		Point& operator=(const Point&);
 
         float getX() const { return m_x; }
         float getY() const { return m_y; }
@@ -14,7 +15,6 @@ class Point
 			return sqrt(static_cast<double>((p1.m_x - p2.m_x)*(p1.m_x - p2.m_x) + (p1.m_y - p2.m_y)*(p1.m_y - p2.m_y)));
         }
 		Point& getNextPosWithSpeed(const Point&, float) const;
-    protected:
     private:
         float m_x;
         float m_y;

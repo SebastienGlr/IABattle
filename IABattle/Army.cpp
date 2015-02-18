@@ -2,7 +2,6 @@
 
 Army::Army(int nbUnit, int levelUnit)
 {
-    this->m_unitList = std::vector<Unit*>(nbUnit);
     for(int i = 0; i < nbUnit; ++i)
         this->m_unitList.push_back(new Unit(levelUnit));
 }
@@ -22,7 +21,7 @@ Unit& Army::getUnit(int idUnit) const
 
 Unit& Army::getNearestUnit(const Point& p) const
 {
-    Unit *u = this->m_unitList[0];
+    Unit *u = this->m_unitList.front();
     double dist = Point::getDistance(u->getPosition(), p), tmp;
 
     for(auto it = this->m_unitList.begin(); it != this->m_unitList.end(); ++it)
@@ -34,7 +33,7 @@ Unit& Army::getNearestUnit(const Point& p) const
 
 Unit& Army::getFurthestUnit(const Point& p) const
 {
-    Unit *u = this->m_unitList[0];
+    Unit *u = this->m_unitList.front();
     double dist = Point::getDistance(u->getPosition(), p), tmp;
 
     for(auto it = this->m_unitList.begin(); it != this->m_unitList.end(); ++it)
@@ -48,11 +47,11 @@ Unit& Army::getFurthestUnit(const Point& p) const
 
 Unit& Army::getLowestUnit(int capacityIndex) const
 {
-    Unit *u = this->m_unitList[0];
-    int level = u[capacityIndex].getLevel(), tmp;
+    Unit *u = this->m_unitList.front();
+	int level = u->operator[](capacityIndex).getLevel(), tmp;
 
     for(auto it = this->m_unitList.begin(); it != this->m_unitList.end(); ++it)
-        if((tmp = (*it)[capacityIndex].getLevel()) < level)
+		if ((tmp = (*it)->operator[](capacityIndex).getLevel()) < level)
         {
             level = tmp;
             u = *it;
@@ -62,11 +61,11 @@ Unit& Army::getLowestUnit(int capacityIndex) const
 
 Unit& Army::getHighestUnit(int capacityIndex) const
 {
-    Unit *u = this->m_unitList[0];
-    int level = u[capacityIndex].getLevel(), tmp;
+    Unit *u = this->m_unitList.front();
+    int level = u->operator[](capacityIndex).getLevel(), tmp;
 
     for(auto it = this->m_unitList.begin(); it != this->m_unitList.end(); ++it)
-        if((tmp = (*it)[capacityIndex].getLevel()) > level)
+        if((tmp = (*it)->operator[](capacityIndex).getLevel()) > level)
         {
             level = tmp;
             u = *it;
