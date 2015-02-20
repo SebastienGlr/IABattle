@@ -1,6 +1,6 @@
 #include "UnitAI.h"
 
-Action& UnitAI::operator()(Unit& u, const Army& ally, const Army& ennemy) const
+Action& UnitAI::operator()(Unit& u, Army& ally, Army& ennemy) const
 {
 	Action *action;
 	Unit *uEnnemy;

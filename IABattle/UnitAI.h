@@ -8,7 +8,7 @@
 class UnitAI
 {
 public:
-	Action& operator()(Unit& u, const Army& ally, const Army& ennemy) const;
+	Action& operator()(Unit& u, Army& ally, Army& ennemy) const;
 private:
 };
 

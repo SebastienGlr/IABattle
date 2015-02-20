@@ -2,35 +2,42 @@
 #include <iostream>
 #include <algorithm>
 #include <ctime>
+#include <tuple>
 #include "Army.h"
 #include "UnitAI.h"
 
 int main(int argc, char* argv[])
 {
-	Army a1(10, 10), a2(10, 10);
-	Unit *u1, *u2;
+	Army *a1 = new Army(10, 10), *a2 = new Army(10, 10);
+	std::tuple<Unit*, Army*, Army*> fighter;
 	UnitAI ia;
 	int nbTours = 1;
-	srand(time(NULL));
+	std::vector<std::tuple<Unit*, Army*, Army*> > unitesCombat;
 
-	while (a1.size() > 0 && a2.size() > 0)
+	while (a1->size() > 0 && a2->size() > 0)
 	{
 		std::cout << "========== Tour " << nbTours++ << " ==========" << std::endl;
-		//Round of the first Army
-		std::random_shuffle(a1.getUnitList().begin(), a1.getUnitList().end());
-		u1 = a1.getUnitList().front();
-		ia(*u1, a1, a2).execute();
-		a2.purge();
-		//Round of the second Army
-		std::random_shuffle(a2.getUnitList().begin(), a2.getUnitList().end());
-		u2 = a2.getUnitList().front();
-		ia(*u2, a2, a1).execute();
-		a1.purge();
+		//Récupération des unités pour le tour
+		unitesCombat.clear();
+		for (auto && u : a1->getUnitList())
+			unitesCombat.push_back(std::make_tuple(u, a1, a2));
+		for (auto && u : a2->getUnitList())
+			unitesCombat.push_back(std::make_tuple(u, a2, a1));
+		
+		while (unitesCombat.size() > 0)
+		{
+			std::random_shuffle(unitesCombat.begin(), unitesCombat.end());
+
+			fighter = unitesCombat.back();
+			ia(*std::get<0>(fighter), *std::get<1>(fighter), *std::get<2>(fighter)).execute();
+			std::get<2>(fighter)->purge();
+			unitesCombat.pop_back();
+		}
 	}
 	
 	std::cout << "Score Final:" << std::endl
-		<< "Armée A: " << a1.size() << std::endl
-		<< "Armée B: " << a2.size() << std::endl;
+		<< "Armée A: " << a1->size() << std::endl
+		<< "Armée B: " << a2->size() << std::endl;
 
 	return 0;
 }

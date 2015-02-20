@@ -1,19 +1,20 @@
 #include <iostream>
 #include <stdexcept>
 #include <algorithm>
-#include <time.h>
+#include <ctime>
 #include <vector>
 #include "Unit.h"
 
 unsigned int Unit::nbUnits = 0;
 
-Unit::Unit(int levelTotal) : m_unitId(++nbUnits), m_unitPosition(new Point(0,0))
+Unit::Unit(int levelTotal) : m_unitId(++nbUnits)
 {
 	std::vector<int> levelsIndex;
     int tabLevel[7] = { 0 };
-    srand(time(NULL));
-
-	m_AICode = static_cast<AICode>((int)(16.0 * (rand() / (RAND_MAX + 1.0)))); //Generate the IACode randomly
+    std::srand(std::time(0));
+	
+	m_unitPosition = new Point(100.0 * (std::rand() / RAND_MAX), 100.0 * (std::rand() / RAND_MAX));
+	m_AICode = static_cast<AICode>(16 * (std::rand() / (RAND_MAX + 1))); //Generate the IACode randomly
 
 	// Fill the vector for the random indexes
 	for (int i = 0; i < 7; ++i)
@@ -21,7 +22,7 @@ Unit::Unit(int levelTotal) : m_unitId(++nbUnits), m_unitPosition(new Point(0,0))
     for(int i = 0; i < 6; i++)
     {
 		std::random_shuffle(levelsIndex.begin(), levelsIndex.end());
-		tabLevel[levelsIndex[0]] = (int)(levelTotal * (rand() / (RAND_MAX + 1.0)));
+		tabLevel[levelsIndex[0]] = levelTotal * (std::rand() / (RAND_MAX + 1));
 		levelTotal -= tabLevel[levelsIndex[0]];
 		levelsIndex.erase(levelsIndex.begin());
     }
