@@ -1,5 +1,8 @@
 #include "Point.h"
 #include <ostream>
+#include <iomanip>
+
+Point::Point() : m_x(0), m_y(0) {}
 
 Point::Point(float x, float y) : m_x(x), m_y(y)
 {}
@@ -10,8 +13,8 @@ Point& Point::getNextPosWithSpeed(const Point& position, float speed) const
 	double distance = Point::getDistance(*this, position);
 	if (distance > speed)
 	{
-		float x = (speed * distance) * (position.m_x - this->m_x) + this->m_x;
-		float y = (speed * distance) * (position.m_y - this->m_y) + this->m_y;
+		float x = (speed / distance) * (position.m_x - this->m_x) + this->m_x;
+		float y = (speed / distance) * (position.m_y - this->m_y) + this->m_y;
 		return Point(x, y);
 	}
 
@@ -28,8 +31,7 @@ Point& Point::operator=(const Point& p)
 	return *this;
 }
 
-std::ostream& operator<<(std::ostream &out, const Point& p)
+std::ostream & operator<<(std::ostream &out, const Point& p)
 {
-	out << "(" << p.getX() << ", " << p.getY() << ")";
-	return out;
+	return out << "(" << std::fixed << std::setprecision(0) << p.getX() << ", " << p.getY() << ")";
 }

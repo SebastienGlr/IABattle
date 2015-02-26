@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <algorithm>
-#include <ctime>
+#include <random>
 #include <vector>
 #include "Unit.h"
 
@@ -11,31 +11,26 @@ Unit::Unit(int levelTotal) : m_unitId(++nbUnits)
 {
 	std::vector<int> levelsIndex;
     int tabLevel[7] = { 0 };
-    std::srand(std::time(0));
+	std::random_device rd;
+	std::default_random_engine e1(rd());
+	std::uniform_int_distribution<> uniform_dist(0, 100);
 	
-	m_unitPosition = new Point(100.0 * (std::rand() / RAND_MAX), 100.0 * (std::rand() / RAND_MAX));
-	m_AICode = static_cast<AICode>(16 * (std::rand() / (RAND_MAX + 1))); //Generate the IACode randomly
+	Point m_unitPosition(uniform_dist(e1), uniform_dist(e1));
 
+	uniform_dist = std::uniform_int_distribution<>(0, 15);
+	m_AICode = static_cast<AICode>(uniform_dist(e1)); //Generate the IACode randomly
+	
+	m_capacities[0] = new SpeedCapacity(0);
+	m_capacities[1] = new HealthCapacity(0);
+	m_capacities[2] = new ArmorCapacity(0);
+	m_capacities[3] = new RegenCapacity(0);
+	m_capacities[4] = new WeaponDamageCapacity(0);
+	m_capacities[5] = new WeaponRangeCapacity(0);
+	m_capacities[6] = new WeaponSpeedCapacity(0);
 	// Fill the vector for the random indexes
-	for (int i = 0; i < 7; ++i)
-		levelsIndex.push_back(i);
-    for(int i = 0; i < 6; i++)
-    {
-		std::random_shuffle(levelsIndex.begin(), levelsIndex.end());
-		tabLevel[levelsIndex[0]] = levelTotal * (std::rand() / (RAND_MAX + 1));
-		levelTotal -= tabLevel[levelsIndex[0]];
-		levelsIndex.erase(levelsIndex.begin());
-    }
-	tabLevel[levelsIndex[0]] = levelTotal;
-
-	//Assign levels to capacities
-    m_capacities[0] = new SpeedCapacity(tabLevel[0]);
-    m_capacities[1] = new HealthCapacity(tabLevel[1]);
-    m_capacities[2] = new ArmorCapacity(tabLevel[2]);
-    m_capacities[3] = new RegenCapacity(tabLevel[3]);
-    m_capacities[4] = new WeaponDamageCapacity(tabLevel[4]);
-    m_capacities[5] = new WeaponRangeCapacity(tabLevel[5]);
-    m_capacities[6] = new WeaponSpeedCapacity(tabLevel[6]);
+	uniform_dist = std::uniform_int_distribution<>(0, 6);
+	for (int i = 0; i < levelTotal; ++i)
+		m_capacities[uniform_dist(e1)]->upgrade();
 }
 
 Unit::Unit(AICode AICode
@@ -46,8 +41,14 @@ Unit::Unit(AICode AICode
            , int weaponDamageLevel
            , int weaponRangeLevel
            , int weaponSpeedLevel
-		   ) : m_unitId(++nbUnits), m_unitPosition(new Point(0, 0)), m_AICode(AICode)
+		   ) : m_unitId(++nbUnits), m_AICode(AICode)
 {
+	std::random_device rd;
+	std::default_random_engine e1(rd());
+	std::uniform_int_distribution<> uniform_dist(0, 100);
+
+	Point m_unitPosition(uniform_dist(e1), uniform_dist(e1));
+
     m_capacities[0] = new SpeedCapacity(speedLevel);
     m_capacities[1] = new HealthCapacity(healthLevel);
     m_capacities[2] = new ArmorCapacity(armorLevel);
@@ -108,7 +109,7 @@ bool Unit::shoot()
 void Unit::takeDamage(float value)
 {
     float newHealth = this->getHealth().getValue() - (value - this->getArmor().getValue());
-    this->getHealth().setValue(newHealth);
+    this->operator[](1).setValue(newHealth);
 }
 
 bool Unit::isAlive() const

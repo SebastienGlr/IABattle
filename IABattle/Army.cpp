@@ -75,10 +75,16 @@ Unit& Army::getHighestUnit(int capacityIndex) const
 
 void Army::purge()
 {
-	for (auto it = this->m_unitList.begin(); it != this->m_unitList.end(); ++it)
+	for (auto it = this->m_unitList.begin(); it != this->m_unitList.end();)
 	{
 		if (!(*it)->isAlive())
-			m_unitList.erase(it);
+		{
+			delete *it;
+			*it = nullptr;
+			it = m_unitList.erase(it);
+		}
+		else
+			it++;
 	}
 }
 

@@ -4,7 +4,6 @@ WeaponSpeedCapacity::WeaponSpeedCapacity(int level) : Capacity(level)
 {
 	this->m_value = -1;
     computeValue();
-    this->m_valueMax = this->m_value;
 }
 
 void WeaponSpeedCapacity::computeValue()
