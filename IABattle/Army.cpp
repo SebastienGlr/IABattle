@@ -99,3 +99,29 @@ void Army::purge()
 	}
 }
 
+int  Army::getGlobalLevel() const {
+	int globalLevel = 0;
+
+	for each (Unit* unit in m_unitList) {
+		globalLevel += unit->getLevel();
+	}
+
+	return globalLevel;
+}
+
+void  Army::saveArmy() const {
+	std::string fileName = "army_" + std::to_string(size()) + "_" + std::to_string(getGlobalLevel()) + ".save";
+
+	std::ofstream armySaveFile(fileName/*, std::ios::out | std::ios::trunc*/);
+
+	if(!armySaveFile) {
+		throw 1;
+	}
+	else {
+		for each (Unit* unit in m_unitList) {
+			armySaveFile << unit->getSpeed().getLevel() << " " << unit->getHealth().getLevel() << " " << unit->getArmor().getLevel() << " " << unit->getRegen().getLevel() << " " << unit->getWeaponDamage().getLevel() << " " << unit->getWeaponRange().getLevel() << " " << unit->getWeaponSpeed().getLevel() << " " << unit->getAICode() << " " << std::endl;
+		}
+		armySaveFile.close();
+	}
+}
+

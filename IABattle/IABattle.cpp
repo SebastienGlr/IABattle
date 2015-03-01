@@ -44,6 +44,9 @@ int main(int argc, char* argv[])
 		<< "Armee A: " << a1.size() << std::endl
 		<< "Armee B: " << a2.size() << std::endl;
 
+	a1.saveArmy();
+	a2.saveArmy();
+
 	return 0;
 }
 
