@@ -10,7 +10,7 @@ public:
 	Army();
     Army(int, int);
     Army(const std::vector<Unit*>&);
-	Army(Army& army);
+	Army(const Army& army);
 
     std::vector<Unit*> getUnitList() const { return m_unitList; }
 	Unit& getUnit(int);
@@ -25,11 +25,19 @@ public:
 	void saveArmy() const;
 
 	Army mutate();
-	Army& operator*(const Army& army) const;
+	Army& operator*(const Army&) const;
 
     void purge();
+
+	int getArmyId() const {	return this->m_armyId; };
+	int getScore() const { return this->m_score; };
+
+	bool operator<(const Army&) const;
 private:
+	static unsigned int nbArmies;
+	unsigned int m_armyId;
     std::vector<Unit*> m_unitList;
+	int m_score;
 };
 
 class FighterWrapper

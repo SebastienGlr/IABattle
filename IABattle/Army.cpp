@@ -2,21 +2,22 @@
 #include <fstream>
 #include <algorithm>
 
+unsigned int Army::nbArmies = 0;
 
-Army::Army() {
+Army::Army() : m_armyId(nbArmies++) {
 }
 
-Army::Army(int nbUnit, int levelUnit)
+Army::Army(int nbUnit, int levelUnit) : m_armyId(nbArmies++)
 {
     for(int i = 0; i < nbUnit; i++)
         this->m_unitList.push_back(new Unit(levelUnit));
 }
 
-Army::Army(const std::vector<Unit*>& unitList) : m_unitList(unitList)
+Army::Army(const std::vector<Unit*>& unitList) :m_armyId(nbArmies++), m_unitList(unitList)
 {
 }
 
-Army::Army(Army& army) 
+Army::Army(const Army& army) : m_armyId(army.m_armyId)
 {
 	for(int i = 0; i < army.m_unitList.size(); i++) {
 		this->m_unitList.push_back(new Unit(*army.m_unitList[i]));
@@ -188,4 +189,8 @@ Army& Army::operator*(const Army& army) const{
 	}
 
 	return newArmy;
+}
+
+bool Army::operator<(const Army& otherArmy) const {
+	return (m_score < otherArmy.m_score);
 }
