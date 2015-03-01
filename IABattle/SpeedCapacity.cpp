@@ -7,5 +7,5 @@ SpeedCapacity::SpeedCapacity(int level) : Capacity(level)
 
 void SpeedCapacity::computeValue()
 {
-    this->m_value = 1 + this->m_level;
+    this->m_value = 1.f + this->m_level;
 }

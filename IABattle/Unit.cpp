@@ -9,13 +9,11 @@ unsigned int Unit::nbUnits = 0;
 
 Unit::Unit(int levelTotal) : m_unitId(++nbUnits)
 {
-	std::vector<int> levelsIndex;
-    int tabLevel[7] = { 0 };
 	std::random_device rd;
 	std::default_random_engine e1(rd());
-	std::uniform_int_distribution<> uniform_dist(0, 100);
+	std::uniform_int_distribution<> uniform_dist(0.f, 100.f);
 	
-	Point m_unitPosition(uniform_dist(e1), uniform_dist(e1));
+	m_unitPosition = Point(uniform_dist(e1), uniform_dist(e1));
 
 	uniform_dist = std::uniform_int_distribution<>(0, 15);
 	m_AICode = static_cast<AICode>(uniform_dist(e1)); //Generate the IACode randomly
@@ -45,7 +43,7 @@ Unit::Unit(AICode AICode
 {
 	std::random_device rd;
 	std::default_random_engine e1(rd());
-	std::uniform_int_distribution<> uniform_dist(0, 100);
+	std::uniform_int_distribution<> uniform_dist(0.f, 100.f);
 
 	Point m_unitPosition(uniform_dist(e1), uniform_dist(e1));
 
