@@ -18,6 +18,9 @@ public:
     Unit& getLowestUnit(int) const;
     Unit& getHighestUnit(int) const;
 
+	int getGlobalLevel() const;
+	void saveArmy() const;
+
     void purge();
 private:
     std::vector<Unit*> m_unitList;
