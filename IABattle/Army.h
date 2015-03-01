@@ -7,11 +7,14 @@
 class Army
 {
 public:
+	Army();
     Army(int, int);
     Army(const std::vector<Unit*>&);
+	Army(Army& army);
 
     std::vector<Unit*> getUnitList() const { return m_unitList; }
-    Unit& getUnit(int);
+	Unit& getUnit(int);
+	Unit& getConstUnit(int) const;
     int size() const { return this->m_unitList.size(); }
     Unit& getNearestUnit(const Point&) const;
     Unit& getFurthestUnit(const Point&) const;
@@ -20,6 +23,9 @@ public:
 
 	int getGlobalLevel() const;
 	void saveArmy() const;
+
+	Army mutate();
+	Army& operator*(const Army& army) const;
 
     void purge();
 private:

@@ -16,8 +16,10 @@ enum AICode { LD, HD, L0, H0, L1, H1, L2, H2, L3, H3, L4, H4, L5, H5, L6, H6 };
 class Unit
 {
     public:
+		Unit();
         Unit(int);
         Unit(AICode, int, int, int, int, int, int, int);
+		Unit(const Unit& unit);
 
 		//Attributes Getters
         int getId() const { return m_unitId; }
@@ -41,6 +43,9 @@ class Unit
         bool shoot();
         void takeDamage(float);
         bool isAlive() const;
+
+		Unit& mutate() const;
+		Unit& operator*(const Unit& unit) const;
     private:
         static unsigned int nbUnits;
         unsigned int m_unitId;

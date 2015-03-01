@@ -7,6 +7,10 @@
 
 unsigned int Unit::nbUnits = 0;
 
+Unit::Unit() {
+
+}
+
 Unit::Unit(int levelTotal) : m_unitId(++nbUnits)
 {
 	std::random_device rd;
@@ -54,6 +58,20 @@ Unit::Unit(AICode AICode
     m_capacities[4] = new WeaponDamageCapacity(weaponDamageLevel);
     m_capacities[5] = new WeaponRangeCapacity(weaponRangeLevel);
     m_capacities[6] = new WeaponSpeedCapacity(weaponSpeedLevel);
+}
+
+Unit::Unit(const Unit& unit) : m_unitId(++nbUnits) 
+{
+	m_AICode = unit.m_AICode;
+	m_unitPosition = unit.m_unitPosition;
+
+	m_capacities[0] = new SpeedCapacity(unit.getSpeed().getLevel());
+	m_capacities[1] = new HealthCapacity(unit.getHealth().getLevel());
+	m_capacities[2] = new ArmorCapacity(unit.getArmor().getLevel());
+	m_capacities[3] = new RegenCapacity(unit.getRegen().getLevel());
+	m_capacities[4] = new WeaponDamageCapacity(unit.getWeaponDamage().getLevel());
+	m_capacities[5] = new WeaponRangeCapacity(unit.getWeaponRange().getLevel());
+	m_capacities[6] = new WeaponSpeedCapacity(unit.getWeaponSpeed().getLevel());
 }
 
 Capacity& Unit::operator[](unsigned int i) const
@@ -113,4 +131,83 @@ void Unit::takeDamage(float value)
 bool Unit::isAlive() const
 {
     return this->getHealth().getValue() > 0;
+}
+
+Unit& Unit::mutate() const 
+{
+	Unit newUnit = Unit(*this);
+
+	int capacityToDecrease = -1;
+	int capacityToDecreaseLevel = 0;
+
+	while(capacityToDecrease == -1) {
+		int tempCapacityToDecrease = std::rand() % 7;
+		int tempCapacityToDecreaseLevel = m_capacities[tempCapacityToDecrease]->getValue();
+		if(tempCapacityToDecreaseLevel > 0) {
+			capacityToDecrease = tempCapacityToDecrease;
+			capacityToDecreaseLevel = tempCapacityToDecreaseLevel;
+		}
+	}
+
+	int capacityToIncrease = -1;
+
+	while(capacityToIncrease == -1) {
+		int tempCapacityToIncrease = std::rand() % 7;
+		if(tempCapacityToIncrease != capacityToDecrease) {
+			capacityToIncrease = tempCapacityToIncrease;
+		}
+	}
+
+	int randomMutation = std::rand() % capacityToDecreaseLevel;
+
+	for(int i = 0; i < randomMutation; i++) {
+		newUnit.m_capacities[capacityToDecrease]->downgrade();
+		newUnit.m_capacities[capacityToIncrease]->upgrade();
+	}
+
+	return newUnit;
+}
+
+Unit& Unit::operator*(const Unit& unit) const {
+	Unit newUnit;
+
+	newUnit.m_AICode = std::rand() % 2 == 0 ? this->m_AICode : unit.m_AICode;
+
+	int newUnitCapacityPoints = 0;
+	int otherUnitLevel = unit.getLevel();
+	int currentUnitLevel = this->getLevel();
+
+	if(otherUnitLevel == currentUnitLevel) {
+		newUnitCapacityPoints = currentUnitLevel;
+	}
+	else {
+		int levelDifference = abs(otherUnitLevel - currentUnitLevel);
+		int minimumLevel = std::min(otherUnitLevel, currentUnitLevel);
+		newUnitCapacityPoints = (std::rand() % levelDifference) + minimumLevel;
+	}
+
+	newUnit.m_capacities[0] = new SpeedCapacity(0);
+	newUnit.m_capacities[1] = new HealthCapacity(0);
+	newUnit.m_capacities[2] = new ArmorCapacity(0);
+	newUnit.m_capacities[3] = new RegenCapacity(0);
+	newUnit.m_capacities[4] = new WeaponDamageCapacity(0);
+	newUnit.m_capacities[5] = new WeaponRangeCapacity(0);
+	newUnit.m_capacities[6] = new WeaponSpeedCapacity(0);
+
+	while(newUnitCapacityPoints > 0) {
+		int capacityID = std::rand() % 7;
+
+		int myCapacityLevel = this->m_capacities[capacityID]->getLevel();
+		int otherUnitCapacityLevel = unit.m_capacities[capacityID]->getLevel();
+		int newUnitCapacityLevel = newUnit.m_capacities[capacityID]->getLevel();
+
+		int capacityMaximumLevel = std::max(myCapacityLevel, otherUnitCapacityLevel);
+
+		if(newUnitCapacityLevel < capacityMaximumLevel) {
+			newUnit.m_capacities[capacityID]->upgrade();
+			newUnitCapacityPoints--;
+		}
+	}
+
+	return newUnit;
 }
