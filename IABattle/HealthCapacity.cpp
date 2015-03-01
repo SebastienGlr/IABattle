@@ -15,6 +15,6 @@ void HealthCapacity::computeValue()
 		healthPercentage = this->m_value / this->m_valueMax;
 	else
 		healthPercentage = 1;
-	this->m_valueMax = (1 + this->m_level) * 10;
+	this->m_valueMax = (1.f + this->m_level) * 10.f;
 	this->m_value = healthPercentage * this->m_valueMax;
 }

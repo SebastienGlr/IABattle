@@ -3,11 +3,11 @@
 Action& UnitAI::operator()(Unit * u, Army * ally, Army * ennemy) const
 {
 	Action *action = nullptr;
-	Unit *uEnnemy = nullptr;
 	Point * uPosition = &(u->getPosition());
 
 	if (u->getWeaponSpeed().getValue() == 0) // If we can shoot
 	{
+		Unit *uEnnemy = nullptr;
 		switch (u->getAICode()) //Choice of the target to shoot
 		{
 		case LD:
@@ -67,8 +67,7 @@ Action& UnitAI::operator()(Unit * u, Army * ally, Army * ennemy) const
 			action = new ActionShoot(u, uEnnemy);
 	}
 	else
-		// Flee the ennemy by coming closer to the furthest ally
-		action = new ActionMove(u, uPosition->getNextPosWithSpeed(ally->getFurthestUnit(*uPosition).getPosition() , u->getSpeed().getValue()));
+		action = new ActionMove(u, uPosition->getNextPosWithSpeed(ennemy->getNearestUnit(*uPosition).getPosition() , -(u->getSpeed().getValue())));
 
 	return *action;
 }

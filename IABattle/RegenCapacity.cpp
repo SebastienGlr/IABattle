@@ -7,5 +7,5 @@ RegenCapacity::RegenCapacity(int level) : Capacity(level)
 
 void RegenCapacity::computeValue()
 {
-    this->m_value = this->m_level / 1000;
+    this->m_value = this->m_level / 1000.f;
 }

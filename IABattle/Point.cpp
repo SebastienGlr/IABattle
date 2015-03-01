@@ -1,23 +1,25 @@
 #include "Point.h"
 #include <ostream>
 #include <iomanip>
+#include <cmath>
+
+
 
 Point::Point() : m_x(0), m_y(0) {}
 
 Point::Point(float x, float y) : m_x(x), m_y(y)
 {}
 
-Point& Point::getNextPosWithSpeed(const Point& position, float speed) const
+Point Point::getNextPosWithSpeed(const Point& position, float speed) const
 {
 	// Return the Position we can go 
 	double distance = Point::getDistance(*this, position);
 	if (distance > speed)
 	{
-		float x = (speed / distance) * (position.m_x - this->m_x) + this->m_x;
-		float y = (speed / distance) * (position.m_y - this->m_y) + this->m_y;
+		float x = fmod((speed / distance) * (position.m_x - this->m_x) + this->m_x, 100.0);
+		float y = fmod((speed / distance) * (position.m_y - this->m_y) + this->m_y, 100.0);
 		return Point(x, y);
 	}
-
 	return Point(position);
 }
 

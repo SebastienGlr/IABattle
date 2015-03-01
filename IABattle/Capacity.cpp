@@ -1,6 +1,6 @@
 #include "Capacity.h"
 
-Capacity::Capacity(int level) : m_level(level) {}
+Capacity::Capacity(int level) : m_value(0.f), m_level(level) {}
 
 void Capacity::upgrade()
 {

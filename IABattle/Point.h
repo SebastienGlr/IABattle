@@ -16,7 +16,10 @@ class Point
         {
 			return sqrt(static_cast<double>((p1.m_x - p2.m_x)*(p1.m_x - p2.m_x) + (p1.m_y - p2.m_y)*(p1.m_y - p2.m_y)));
         }
-		Point& getNextPosWithSpeed(const Point&, float) const;
+		Point getNextPosWithSpeed(const Point&, float) const;
+
+		static const double MAX_X;
+		static const double MAX_Y;
     private:
 		friend std::ostream & operator<<(std::ostream &os, const Point& p);
 

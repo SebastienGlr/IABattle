@@ -8,7 +8,7 @@ WeaponSpeedCapacity::WeaponSpeedCapacity(int level) : Capacity(level)
 
 void WeaponSpeedCapacity::computeValue()
 {
-    this->m_valueMax = 1000 / (1 + this->m_level);
+    this->m_valueMax = 5 / (1 + this->m_level);
 
     if(this->m_value == -1.f)
         this->m_value = 0;
