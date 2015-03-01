@@ -105,7 +105,7 @@ void Unit::refresh()
     WeaponSpeedCapacity& weaponSpeed = this->getWeaponSpeed();
 
     //Life value can't be more than the max health
-	health.setValue(std::max(health.getValue() + regen.getValue(), health.getValueMax()));
+	health.setValue(std::min(health.getValue() + regen.getValue(), health.getValueMax()));
 
     if(weaponSpeed.getValue() > 0)
         weaponSpeed.setValue(weaponSpeed.getValue() - 1);

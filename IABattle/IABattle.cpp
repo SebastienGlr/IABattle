@@ -84,7 +84,7 @@ void mainLoop() {
 
 	//DEBUG
 	int I = 5; //nombre d'itérations de combats
-	int T = 10; //score seuil a partir duquel on sort de la boucle
+	int T = 2; //score seuil a partir duquel on sort de la boucle
 	int N = 10; //nombre d'armées initiales
 	int X = 1; //nombre d'unités
 	int Y = 20; //niveau global initial
@@ -98,7 +98,9 @@ void mainLoop() {
 	//BOUCLE PRINCIPALE
 	Army superiorArmy;
 
+	int nbBoucles = 0;
 	while(true) {
+		nbBoucles++;
 		std::vector<Army> tempArmies(armies);
 		std::map<int, int> scoreForArmy;
 
@@ -116,7 +118,8 @@ void mainLoop() {
 				Army armyTempB = Army(tempArmies.at(j));
 
 				/*********************************************************** COMBAT ! **********************************************************************************************/ 
-
+				std::cout << std::endl;
+				std::cout << "Armee " << armyTempA.getArmyId() << " contre Armee " << armyTempB.getArmyId() << std::endl;
 				UnitAI ia;
 				int nbTours = 0;
 				std::vector<FighterWrapper> unitesCombat;
@@ -146,23 +149,23 @@ void mainLoop() {
 				}
 
 				std::cout << "Score Final:" << std::endl
-					<< "Armee A: " << armyTempA.size() << std::endl
-					<< "Armee B: " << armyTempB.size() << std::endl;
+				<< "Armee A: " << armyTempA.size() << std::endl
+				<< "Armee B: " << armyTempB.size() << std::endl;
 
 				/************************************************************************************************************************************************************/
 
-				scoreForArmy[armyTempTempA.getArmyId()] += armyTempA.getScore();
-				scoreForArmy[armyTempB.getArmyId()] += armyTempB.getScore();
+				scoreForArmy[armyTempTempA.getArmyId()] += armyTempA.size();
+				scoreForArmy[armyTempB.getArmyId()] += armyTempB.size();
 			}
 		}
 
-		//TODO: CLASSER LES ARMEES PAR SCORE
+		//CLASSER LES ARMEES PAR SCORE
 		std::sort(tempArmies.begin(), tempArmies.end());
 
 		//SI LE SCORE DE LA 1ERE EST > A T, BREAK
-		if(scoreForArmy[tempArmies.at(0).getScore()] > T) {
+		if(scoreForArmy[tempArmies.at(0).getArmyId()] > T) {
 			superiorArmy = tempArmies.at(0);
-			break;
+			//break;
 		}
 
 		//SINON GENERATION D'ARMEES
@@ -173,15 +176,17 @@ void mainLoop() {
 			newArmies.push_back(tempArmies.at(i));
 		}
 
+		//TODO: armées pas bien copiées (?), du coup ceux la plantent
 		//On prend un croisement issu de chacune des (N*0.3) meilleures armées avec une autre prise aléatoirement
-		for(int i = 0; i < N * 0.3; i++) {
-			newArmies.push_back(tempArmies.at(i) * tempArmies.at(std::rand() % N));
-		}
+		//for(int i = 0; i < N * 0.3; i++) {
+		//	newArmies.push_back(tempArmies.at(i) * tempArmies.at(std::rand() % N));
+		//}
 
+		//TODO: armées pas bien copiées (?), du coup ceux la plantent
 		//on prend une mutation de chacune des (N*0.3) meilleures armées
-		for(int i = 0; i < N * 0.3; i++) {
-			newArmies.push_back(tempArmies.at(i).mutate());
-		}
+		//for(int i = 0; i < N * 0.3; i++) {
+		//	newArmies.push_back(tempArmies.at(i).mutate());
+		//}
 
 		//on génère (N*0.3) nouvelles armées aléatoirement
 		while(newArmies.size() < N) {
@@ -189,10 +194,16 @@ void mainLoop() {
 			newArmies.push_back(aTemp);
 		}
 
-		// ?
 		armies = newArmies;
+
+		std::cout << "Fin de la boucle : " << nbBoucles << std::endl;
+		std::this_thread::sleep_for(std::chrono::seconds(2));
 	}
 
 	//ARMEE SUPERIEURE
 	superiorArmy.saveArmy();
+
+	int a;
+	std::cout << "FIN !" << std::endl;
+	std::cin >> a;
 }
