@@ -31,6 +31,7 @@ public:
 
 	int getArmyId() const {	return this->m_armyId; };
 	int getScore() const { return this->m_score; };
+	void setScore(int score) { this->m_score = score; };
 
 	bool operator<(const Army&) const;
 private:

@@ -1,23 +1,27 @@
 #include "Army.h"
 #include <fstream>
+#include <iostream>
 #include <algorithm>
 
 unsigned int Army::nbArmies = 0;
 
-Army::Army() : m_armyId(nbArmies++) {
+Army::Army() : m_armyId(++nbArmies), m_score(0) 
+{
 }
 
-Army::Army(int nbUnit, int levelUnit) : m_armyId(nbArmies++)
+Army::Army(int nbUnit, int levelUnit) : m_armyId(++nbArmies), m_score(0)
 {
     for(int i = 0; i < nbUnit; i++)
         this->m_unitList.push_back(new Unit(levelUnit));
+
+	std::cout << m_armyId << std::endl;
 }
 
-Army::Army(const std::vector<Unit*>& unitList) :m_armyId(nbArmies++), m_unitList(unitList)
+Army::Army(const std::vector<Unit*>& unitList) :m_armyId(++nbArmies), m_unitList(unitList), m_score(0)
 {
 }
 
-Army::Army(const Army& army) : m_armyId(army.m_armyId)
+Army::Army(const Army& army) : m_armyId(army.m_armyId), m_score(0)
 {
 	for(int i = 0; i < army.m_unitList.size(); i++) {
 		this->m_unitList.push_back(new Unit(*army.m_unitList[i]));
@@ -174,7 +178,7 @@ Army& Army::operator*(const Army& army) const{
 
 	int numberUnitMutation = std::rand() % newArmySize;
 	for(int i = 0; i < numberUnitMutation; i++) {
-		newArmy.m_unitList.push_back(&(this->getConstUnit(i) * army.getConstUnit(i)));
+		newArmy.m_unitList.push_back(&(this->getConstUnit(std::rand() % newArmySize) * army.getConstUnit(std::rand() % newArmySize)));
 	}
 
 	int numberUnitCopy = newArmySize - numberUnitMutation;
