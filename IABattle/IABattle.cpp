@@ -127,28 +127,18 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		for each (Army army in tempArmies) {
-			army.setScore(scoreForArmy[army.getArmyId()]);
-			std::cout << army.getArmyId() << " - " << army.getScore() << std::endl;
+		for(int i = 0; i < N; i++) {
+			tempArmies[i].setScore(scoreForArmy[tempArmies[i].getArmyId()]);
+			std::cout << tempArmies[i].getArmyId() << " - " << tempArmies[i].getScore() << std::endl;
 		}
 
 		std::cout << std::endl;
-
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-
-		for each (Army army in tempArmies) {
-			std::cout << army.getArmyId() << " - " << army.getScore() << std::endl;
-		}
-
-		std::cout << std::endl;
-
-		std::this_thread::sleep_for(std::chrono::seconds(1));
 
 		//CLASSER LES ARMEES PAR SCORE
 		std::sort(tempArmies.begin(), tempArmies.end());
 
-		for each (Army army in tempArmies) {
-			army.setScore(scoreForArmy[army.getArmyId()]);
+		for(int i = 0; i < N; i++) {
+			std::cout << tempArmies[i].getArmyId() << " - " << tempArmies[i].getScore() << std::endl;
 		}
 
 		std::this_thread::sleep_for(std::chrono::seconds(1));
