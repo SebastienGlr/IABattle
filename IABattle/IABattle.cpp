@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
 		std::cout << std::endl;
 
 		//CLASSER LES ARMEES PAR SCORE
-		std::sort(tempArmies.begin(), tempArmies.end());
+		std::sort(tempArmies.begin(), tempArmies.end(), std::greater<Army>());
 
 		for(int i = 0; i < N; i++) {
 			std::cout << tempArmies[i].getArmyId() << " - " << tempArmies[i].getScore() << std::endl;
@@ -159,15 +159,15 @@ int main(int argc, char* argv[])
 
 		//TODO: armées pas bien copiées (?), du coup ceux la plantent
 		//On prend un croisement issu de chacune des (N*0.3) meilleures armées avec une autre prise aléatoirement
-		//for(int i = 0; i < N * 0.3; i++) {
-		//	newArmies.push_back(tempArmies.at(i) * tempArmies.at(std::rand() % N));
-		//}
+		for(int i = 0; i < N * 0.3; i++) {
+			newArmies.push_back(tempArmies.at(i) * tempArmies.at(std::rand() % X));
+		}
 
 		//TODO: armées pas bien copiées (?), du coup ceux la plantent
 		//on prend une mutation de chacune des (N*0.3) meilleures armées
-		//for(int i = 0; i < N * 0.3; i++) {
-		//	newArmies.push_back(tempArmies.at(i).mutate());
-		//}
+		for(int i = 0; i < N * 0.3; i++) {
+			newArmies.push_back(tempArmies.at(i).mutate());
+		}
 
 		//on génère (N*0.3) nouvelles armées aléatoirement
 		while(newArmies.size() < N) {

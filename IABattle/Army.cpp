@@ -13,15 +13,13 @@ Army::Army(int nbUnit, int levelUnit) : m_armyId(++nbArmies), m_score(0)
 {
     for(int i = 0; i < nbUnit; i++)
         this->m_unitList.push_back(new Unit(levelUnit));
-
-	std::cout << m_armyId << std::endl;
 }
 
 Army::Army(const std::vector<Unit*>& unitList) :m_armyId(++nbArmies), m_unitList(unitList), m_score(0)
 {
 }
 
-Army::Army(const Army& army) : m_armyId(army.m_armyId), m_score(0)
+Army::Army(const Army& army) : m_armyId(army.m_armyId), m_score(army.m_score)
 {
 	for(int i = 0; i < army.m_unitList.size(); i++) {
 		this->m_unitList.push_back(new Unit(*army.m_unitList[i]));
@@ -43,6 +41,11 @@ Unit& Army::getConstUnit(int idUnit) const{
 			return **it;
 
 	throw std::runtime_error("ID not in list.");
+}
+
+Unit& Army::getRandomUnit() const
+{
+	return *(m_unitList.at(std::rand() % size()));
 }
 
 Unit& Army::getNearestUnit(const Point& p) const
@@ -150,9 +153,10 @@ void  Army::saveArmy() const {
 	}
 }
 
-Army Army::mutate() {
-	Army newArmy = Army(*this);
-	int armyLength = newArmy.m_unitList.size();
+Army& Army::mutate() const {
+	Army* newArmy = new Army(*this);
+	newArmy->m_armyId = ++nbArmies;
+	int armyLength = newArmy->m_unitList.size();
 
 	int rand1 = 0;
 	int rand2 = 0;
@@ -160,41 +164,53 @@ Army Army::mutate() {
 	while(rand1 == rand2) {
 		rand1 = std::rand() % armyLength;
 		rand2 = std::rand() % armyLength;
+		//std::cout << rand1 << " - " << rand2 << std::endl;
+		//std::cout << armyLength << std::endl;
 	}
 
 	int startMutation = std::min(rand1, rand2);
 	int endMutation = std::max(rand1, rand2);
 
 	for(int i = startMutation; i < endMutation; i++) {
-		newArmy.m_unitList[i] = &(newArmy.m_unitList[i]->mutate());
+		newArmy->m_unitList[i] = new Unit(newArmy->m_unitList[i]->mutate());
 	}
 	
-	return newArmy;
+	return *newArmy;
 }
 
 Army& Army::operator*(const Army& army) const{
-	Army newArmy = Army();
+	Army* newArmy = new Army();
 	int newArmySize = this->size();
 
 	int numberUnitMutation = std::rand() % newArmySize;
 	for(int i = 0; i < numberUnitMutation; i++) {
-		newArmy.m_unitList.push_back(&(this->getConstUnit(std::rand() % newArmySize) * army.getConstUnit(std::rand() % newArmySize)));
+		newArmy->m_unitList.push_back(new Unit(this->getRandomUnit() * army.getRandomUnit()));
 	}
 
 	int numberUnitCopy = newArmySize - numberUnitMutation;
 	while(numberUnitCopy > 0) {
 		if(std::rand() % 2) {
-			newArmy.m_unitList.push_back(new Unit(*(this->m_unitList[std::rand() % newArmySize])));
+			newArmy->m_unitList.push_back(new Unit(*(this->m_unitList[std::rand() % newArmySize])));
 		}
 		else {
-			newArmy.m_unitList.push_back(new Unit(*(army.m_unitList[std::rand() % newArmySize])));
+			newArmy->m_unitList.push_back(new Unit(*(army.m_unitList[std::rand() % newArmySize])));
 		}
 		numberUnitCopy--;
 	}
 
-	return newArmy;
+	return *newArmy;
+}
+
+bool Army::operator>(const Army& otherArmy) const {
+	return (this->m_score > otherArmy.m_score);
 }
 
 bool Army::operator<(const Army& otherArmy) const {
-	return (m_score < otherArmy.m_score);
+	return (this->m_score < otherArmy.m_score);
 }
+
+//Army& Army::operator=(const Army& army) {
+//	for(int i = 0; i < army.m_unitList.size(); i++) {
+//		this->m_unitList.push_back(new Unit(*army.m_unitList[i]));
+//	}
+//}

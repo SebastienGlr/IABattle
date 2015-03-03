@@ -24,7 +24,7 @@ public:
 	int getGlobalLevel() const;
 	void saveArmy() const;
 
-	Army mutate();
+	Army& mutate() const;
 	Army& operator*(const Army&) const;
 
     void purge();
@@ -33,7 +33,12 @@ public:
 	int getScore() const { return this->m_score; };
 	void setScore(int score) { this->m_score = score; };
 
+	//Army& operator=(const Army& army);
+	Unit& getRandomUnit() const;
+
+
 	bool operator<(const Army&) const;
+	bool operator>(const Army&) const;
 private:
 	static unsigned int nbArmies;
 	unsigned int m_armyId;

@@ -7,7 +7,7 @@
 
 unsigned int Unit::nbUnits = 0;
 
-Unit::Unit() {
+Unit::Unit() : m_unitId(++nbUnits) {
 
 }
 
@@ -135,7 +135,7 @@ bool Unit::isAlive() const
 
 Unit& Unit::mutate() const 
 {
-	Unit newUnit = Unit(*this);
+	Unit* newUnit = new Unit(*this);
 
 	int capacityToDecrease = -1;
 	int capacityToDecreaseLevel = 0;
@@ -161,17 +161,17 @@ Unit& Unit::mutate() const
 	int randomMutation = std::rand() % capacityToDecreaseLevel;
 
 	for(int i = 0; i < randomMutation; i++) {
-		newUnit.m_capacities[capacityToDecrease]->downgrade();
-		newUnit.m_capacities[capacityToIncrease]->upgrade();
+		newUnit->m_capacities[capacityToDecrease]->downgrade();
+		newUnit->m_capacities[capacityToIncrease]->upgrade();
 	}
 
-	return newUnit;
+	return *newUnit;
 }
 
 Unit& Unit::operator*(const Unit& unit) const {
-	Unit newUnit;
+	Unit* newUnit = new Unit(0);
 
-	newUnit.m_AICode = std::rand() % 2 == 0 ? this->m_AICode : unit.m_AICode;
+	newUnit->m_AICode = std::rand() % 2 == 0 ? this->m_AICode : unit.m_AICode;
 
 	int newUnitCapacityPoints = 0;
 	int otherUnitLevel = unit.getLevel();
@@ -186,28 +186,28 @@ Unit& Unit::operator*(const Unit& unit) const {
 		newUnitCapacityPoints = (std::rand() % levelDifference) + minimumLevel;
 	}
 
-	newUnit.m_capacities[0] = new SpeedCapacity(0);
-	newUnit.m_capacities[1] = new HealthCapacity(0);
-	newUnit.m_capacities[2] = new ArmorCapacity(0);
-	newUnit.m_capacities[3] = new RegenCapacity(0);
-	newUnit.m_capacities[4] = new WeaponDamageCapacity(0);
-	newUnit.m_capacities[5] = new WeaponRangeCapacity(0);
-	newUnit.m_capacities[6] = new WeaponSpeedCapacity(0);
+	//newUnit->m_capacities[0] = new SpeedCapacity(0);
+	//newUnit->m_capacities[1] = new HealthCapacity(0);
+	//newUnit->m_capacities[2] = new ArmorCapacity(0);
+	//newUnit->m_capacities[3] = new RegenCapacity(0);
+	//newUnit->m_capacities[4] = new WeaponDamageCapacity(0);
+	//newUnit->m_capacities[5] = new WeaponRangeCapacity(0);
+	//newUnit->m_capacities[6] = new WeaponSpeedCapacity(0);
 
 	while(newUnitCapacityPoints > 0) {
 		int capacityID = std::rand() % 7;
 
 		int myCapacityLevel = this->m_capacities[capacityID]->getLevel();
 		int otherUnitCapacityLevel = unit.m_capacities[capacityID]->getLevel();
-		int newUnitCapacityLevel = newUnit.m_capacities[capacityID]->getLevel();
+		int newUnitCapacityLevel = newUnit->m_capacities[capacityID]->getLevel();
 
 		int capacityMaximumLevel = std::max(myCapacityLevel, otherUnitCapacityLevel);
 
 		if(newUnitCapacityLevel < capacityMaximumLevel) {
-			newUnit.m_capacities[capacityID]->upgrade();
+			newUnit->m_capacities[capacityID]->upgrade();
 			newUnitCapacityPoints--;
 		}
 	}
 
-	return newUnit;
+	return *newUnit;
 }
