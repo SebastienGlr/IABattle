@@ -74,6 +74,12 @@ Unit::Unit(const Unit& unit) : m_unitId(++nbUnits)
 	m_capacities[6] = new WeaponSpeedCapacity(unit.getWeaponSpeed().getLevel());
 }
 
+//Unit::~Unit() 
+//{
+//	for(int i = 0; i < 7; ++i)
+//		delete m_capacities[i];
+//}
+
 Capacity& Unit::operator[](unsigned int i) const
 {
 	try
@@ -124,7 +130,8 @@ bool Unit::shoot()
 
 void Unit::takeDamage(float value)
 {
-    float newHealth = this->getHealth().getValue() - (value - this->getArmor().getValue());
+	float damageTaken = std::max(1.0f, value - this->getArmor().getValue());
+    float newHealth = this->getHealth().getValue() - damageTaken;
     this->operator[](1).setValue(newHealth);
 }
 

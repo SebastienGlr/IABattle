@@ -11,6 +11,7 @@ public:
     Army(int, int);
     Army(const std::vector<Unit*>&);
 	Army(const Army& army);
+	//~Army();
 
     std::vector<Unit*> getUnitList() const { return m_unitList; }
 	Unit& getUnit(int);

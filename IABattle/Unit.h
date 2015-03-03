@@ -20,6 +20,7 @@ class Unit
         Unit(int);
         Unit(AICode, int, int, int, int, int, int, int);
 		Unit(const Unit& unit);
+		//~Unit();
 
 		//Attributes Getters
         int getId() const { return m_unitId; }

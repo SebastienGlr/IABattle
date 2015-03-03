@@ -26,6 +26,14 @@ Army::Army(const Army& army) : m_armyId(army.m_armyId), m_score(army.m_score)
 	}
 }
 
+//Army::~Army() 
+//{
+//	for(auto it = this->m_unitList.begin(); it != this->m_unitList.end(); ++it)
+//	{
+//		delete *it;
+//	}
+//}
+
 Unit& Army::getUnit(int idUnit) 
 {
 	for(auto it = this->m_unitList.begin(); it != this->m_unitList.end(); ++it)
@@ -137,7 +145,7 @@ int  Army::getGlobalLevel() const {
 	return globalLevel;
 }
 
-void  Army::saveArmy() const {
+void Army::saveArmy() const {
 	std::string fileName = "army_" + std::to_string(size()) + "_" + std::to_string(getGlobalLevel()) + ".save";
 
 	std::ofstream armySaveFile(fileName, std::ios::out | std::ios::trunc);

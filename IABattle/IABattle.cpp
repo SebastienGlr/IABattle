@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
 
 				while(armyTempA.size() > 0 && armyTempB.size() > 0) {
 					nbTours++;
-					std::cout << "========== Tour " << nbTours << " ==========" << std::endl;
+					//std::cout << "========== Tour " << nbTours << " ==========" << std::endl;
 					//Récupération des unités pour le tour
 					unitesCombat.clear();
 					for(auto & u : armyTempA.getUnitList())
@@ -99,7 +99,9 @@ int main(int argc, char* argv[])
 					while(unitesCombat.size() > 0 && armyTempA.size() > 0 && armyTempB.size() > 0) {
 						std::random_shuffle(unitesCombat.begin(), unitesCombat.end());
 						FighterWrapper fighter = unitesCombat.back();
-						ia(fighter.m_fighter, fighter.m_allies, fighter.m_ennemies).execute();
+						Action* a = &ia(fighter.m_fighter, fighter.m_allies, fighter.m_ennemies);
+						a->execute();
+						delete (a);
 						fighter.m_ennemies->purge();
 						fighter.m_allies->purge();
 						unitesCombat.pop_back();
@@ -129,10 +131,10 @@ int main(int argc, char* argv[])
 
 		for(int i = 0; i < N; i++) {
 			tempArmies[i].setScore(scoreForArmy[tempArmies[i].getArmyId()]);
-			std::cout << tempArmies[i].getArmyId() << " - " << tempArmies[i].getScore() << std::endl;
+		//	std::cout << tempArmies[i].getArmyId() << " - " << tempArmies[i].getScore() << std::endl;
 		}
 
-		std::cout << std::endl;
+		//std::cout << std::endl;
 
 		//CLASSER LES ARMEES PAR SCORE
 		std::sort(tempArmies.begin(), tempArmies.end(), std::greater<Army>());
@@ -141,10 +143,10 @@ int main(int argc, char* argv[])
 			std::cout << tempArmies[i].getArmyId() << " - " << tempArmies[i].getScore() << std::endl;
 		}
 
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+		//std::this_thread::sleep_for(std::chrono::seconds(1));
 
 		//SI LE SCORE DE LA 1ERE EST > A T, BREAK
-		if(scoreForArmy[tempArmies.at(0).getArmyId()] > T) {
+		if(scoreForArmy[tempArmies.at(0).getArmyId()] >= T) {
 			superiorArmy = tempArmies.at(0);
 			break;
 		}
@@ -184,9 +186,9 @@ int main(int argc, char* argv[])
 	//ARMEE SUPERIEURE
 	superiorArmy.saveArmy();
 
-	int a;
+	//int a;
 	std::cout << "FIN !" << std::endl;
-	std::cin >> a;
+	//std::cin >> a;
 
 	return 0;
 }
