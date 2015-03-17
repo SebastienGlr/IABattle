@@ -11,3 +11,8 @@ IABattle/Debug/IABattle.tlog/cl.command.1.tlog
 IABattle/Debug/IABattle.tlog/CL.read.1.tlog
 IABattle.psess
 IABattle150218.vspx
+IABattle/Debug/*
+*.exe
+*.ilk
+*.pdb
+*.suo
